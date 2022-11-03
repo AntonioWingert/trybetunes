@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import Loading from './components/Loading';
+import Loading from './components/Loading/Loading';
 
 class Login extends Component {
   render() {
@@ -14,7 +14,7 @@ class Login extends Component {
       redirect,
     } = this.props;
     return (
-      <main>
+      <main data-testid="page-login">
         {isLoading ? <Loading /> : (
           <form>
             <input
