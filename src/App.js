@@ -30,7 +30,7 @@ class App extends React.Component {
     return valid;
   };
 
-  getUserAPI = async () => {
+  getUserAPI = () => {
     const { nickname } = this.state;
     this.setState({ isLoading: true }, async () => {
       await createUser({ name: nickname });
@@ -71,6 +71,7 @@ class App extends React.Component {
           <NotFound />
         </Route>
       </Switch>
+
     );
   }
 }
