@@ -1,37 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import AudioPlayer from '../AudioPlayer/AudioPlayer';
 
 class MusicCard extends Component {
   render() {
-    const {
-      artistName,
-      collectionId,
-      collectionName,
-      artworkUrl,
-
-    } = this.props;
-
+    const { trackName, previewUrl } = this.props;
     return (
-      <Link
-        to={ `album/${collectionId}` }
-        data-testid={ `link-to-album-${collectionId}` }
-      >
-        <div>
-          <img src={ artworkUrl } alt={ collectionName } />
-          <p>{artistName}</p>
-          <p>{collectionName}</p>
-        </div>
-      </Link>
+      <div>
+        <p>{trackName}</p>
+        <AudioPlayer previewUrl={ previewUrl } />
+      </div>
     );
   }
 }
 
 MusicCard.propTypes = {
-  artistName: PropTypes.string.isRequired,
-  collectionId: PropTypes.number.isRequired,
-  collectionName: PropTypes.string.isRequired,
-  artworkUrl: PropTypes.string.isRequired,
+  trackName: PropTypes.string.isRequired,
+  previewUrl: PropTypes.string.isRequired,
 };
 
 export default MusicCard;

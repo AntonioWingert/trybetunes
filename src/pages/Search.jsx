@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Header from './components/Header/Header';
 import Loading from './components/Loading/Loading';
-import MusicCard from './components/MusicCard/MusicCard';
+import MusicCard from './components/MusicCardSearch/MusicCardSearch';
 
 class Search extends Component {
   render() {

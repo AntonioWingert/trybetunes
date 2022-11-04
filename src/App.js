@@ -95,9 +95,11 @@ class App extends React.Component {
             searchArtistName={ searchArtistName }
           />
         </Route>
-        <Route path="/album/:id">
-          <Album />
-        </Route>
+        <Route
+          path="/album/:id"
+          render={ (props) => (
+            <Album { ...props } />) }
+        />
         <Route path="/favorites">
           <Favorites />
         </Route>
