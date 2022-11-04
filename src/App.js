@@ -8,13 +8,17 @@ import Profile from './pages/Profile';
 import ProfileEdit from './pages/ProfileEdit';
 import Search from './pages/Search';
 import { createUser } from './services/userAPI';
+import searchAlbumsAPI from './services/searchAlbumsAPI';
 
 class App extends React.Component {
   state = {
     nickname: '',
     isLoading: false,
     redirect: false,
-    artistName: '',
+    inputArtistName: '',
+    searchResults: [],
+    searchAux: false,
+    searchArtistName: '',
   };
 
   handleChange = ({ target }) => {
@@ -32,9 +36,9 @@ class App extends React.Component {
   };
 
   validateButtonSearch = () => {
-    const { artistName } = this.state;
+    const { inputArtistName } = this.state;
     const MIN_NUMBER = 2;
-    const valid = artistName.length >= MIN_NUMBER;
+    const valid = inputArtistName.length >= MIN_NUMBER;
     return valid;
   };
 
@@ -46,8 +50,27 @@ class App extends React.Component {
     });
   };
 
+  getAlbumAPI = async () => {
+    const { inputArtistName } = this.state;
+    this.setState({ searchArtistName: inputArtistName });
+    this.setState({ isLoading: true, inputArtistName: '' });
+    const results = await searchAlbumsAPI(inputArtistName);
+    this.setState({
+      searchResults: results,
+      isLoading: false,
+      searchAux: true,
+    });
+  };
+
   render() {
-    const { nickname, isLoading, redirect, artistName } = this.state;
+    const { nickname,
+      isLoading,
+      redirect,
+      inputArtistName,
+      searchResults,
+      searchAux,
+      searchArtistName,
+    } = this.state;
     return (
       <Switch>
         <Route exact path="/">
@@ -62,9 +85,14 @@ class App extends React.Component {
         </Route>
         <Route path="/search">
           <Search
-            artistName={ artistName }
+            inputArtistName={ inputArtistName }
             isValid={ this.validateButtonSearch() }
             handleChange={ this.handleChange }
+            getAlbumAPI={ this.getAlbumAPI }
+            searchResults={ searchResults }
+            isLoading={ isLoading }
+            searchAux={ searchAux }
+            searchArtistName={ searchArtistName }
           />
         </Route>
         <Route path="/album/:id">
