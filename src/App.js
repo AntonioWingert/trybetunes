@@ -14,6 +14,7 @@ class App extends React.Component {
     nickname: '',
     isLoading: false,
     redirect: false,
+    artistName: '',
   };
 
   handleChange = ({ target }) => {
@@ -30,6 +31,13 @@ class App extends React.Component {
     return valid;
   };
 
+  validateButtonSearch = () => {
+    const { artistName } = this.state;
+    const MIN_NUMBER = 2;
+    const valid = artistName.length >= MIN_NUMBER;
+    return valid;
+  };
+
   getUserAPI = () => {
     const { nickname } = this.state;
     this.setState({ isLoading: true }, async () => {
@@ -39,7 +47,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { nickname, isLoading, redirect } = this.state;
+    const { nickname, isLoading, redirect, artistName } = this.state;
     return (
       <Switch>
         <Route exact path="/">
@@ -53,7 +61,11 @@ class App extends React.Component {
           />
         </Route>
         <Route path="/search">
-          <Search />
+          <Search
+            artistName={ artistName }
+            isValid={ this.validateButtonSearch() }
+            handleChange={ this.handleChange }
+          />
         </Route>
         <Route path="/album/:id">
           <Album />
