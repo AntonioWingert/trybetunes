@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Header from './components/Header/Header';
 
 class Search extends Component {
@@ -29,5 +30,11 @@ class Search extends Component {
     );
   }
 }
+
+Search.propTypes = {
+  isValid: PropTypes.bool.isRequired,
+  artistName: PropTypes.string.isRequired,
+  handleChange: PropTypes.func.isRequired,
+};
 
 export default Search;
