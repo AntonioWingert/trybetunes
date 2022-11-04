@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import getMusics from '../services/musicsAPI';
 import Header from './components/Header/Header';
 import Loading from './components/Loading/Loading';
@@ -105,5 +106,9 @@ class Album extends Component {
     );
   }
 }
+
+Album.propTypes = {
+  match: PropTypes.instanceOf(Object).isRequired,
+};
 
 export default Album;
