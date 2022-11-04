@@ -1,76 +1,109 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import getMusics from '../services/musicsAPI';
 import Header from './components/Header/Header';
 import Loading from './components/Loading/Loading';
-import getMusics from '../services/musicsAPI';
 import MusicCard from './components/MusicCard/MusicCard';
+import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
 
 class Album extends Component {
   state = {
-    musicsList: [],
+    musicList: [],
+    favoriteList: [],
     albumArt: '',
     albumName: '',
     artistName: '',
     isLoading: false,
-    musicsReturn: false,
+    mscFetched: false,
   };
 
   componentDidMount() {
-    this.getMusicAPI();
+    this.catchFavorites();
   }
 
-  getMusicAPI = async () => {
+  catchFavorites = async () => {
     this.setState({ isLoading: true });
-    const { match: { params: { id } } } = this.props;
-    const music = await getMusics(id);
+    const favoriteMusics = await getFavoriteSongs();
     this.setState({
-      musicsList: music,
-      albumArt: music[0].artworkUrl100,
-      albumName: music[0].collectionName,
-      artistName: music[0].artistName,
+      favoriteList: favoriteMusics,
       isLoading: false,
-      musicsReturn: true,
+    }, this.requestMusics);
+  };
+
+  requestMusics = async () => {
+    this.setState({ isLoading: true });
+    const { favoriteList } = this.state;
+    const { match: { params: { id } } } = this.props;
+
+    const musics = await getMusics(id);
+    const musicsWithFavs = musics.map((music) => {
+      let isChecked = false;
+      const findMusic = favoriteList.find((m) => m.trackId === music.trackId);
+      if (findMusic) isChecked = true;
+      return ({ ...music, checked: isChecked });
+    });
+    this.setState({
+      musicList: musicsWithFavs,
+      albumArt: musics[0].artworkUrl100,
+      albumName: musics[0].collectionName,
+      artistName: musics[0].artistName,
+      isLoading: false,
+      mscFetched: true,
     });
   };
 
+  favoriteMusics = async (music) => {
+    const { musicList } = this.state;
+    const selectedMusic = musicList.findIndex(({ trackId }) => trackId === music.trackId);
+
+    this.setState({ isLoading: true });
+    if (musicList[selectedMusic].checked) {
+      musicList[selectedMusic].checked = false;
+      await removeSong(music);
+    } else {
+      musicList[selectedMusic].checked = true;
+      await addSong(music);
+    }
+    this.setState({ isLoading: false, musicList });
+  };
+
   render() {
-    const { isLoading,
-      musicsList,
+    const {
+      isLoading,
+      musicList,
       albumArt,
       albumName,
       artistName,
-      musicsReturn,
+      mscFetched,
     } = this.state;
+
     return (
       <div data-testid="page-album">
         <Header />
         {isLoading && <Loading />}
         <div>
           <img src={ albumArt } alt={ albumName } />
-          <p data-testid="artist-name">
-            {artistName}
-          </p>
-          <p data-testid="album-name">
-            {albumName}
-          </p>
-          {
-            musicsReturn && musicsList.slice(1).map((music) => (
-              <MusicCard
-                trackName={ music.trackName }
-                previewUrl={ music.previewUrl }
-                key={ music.trackId }
-              />
-            ))
-          }
+          <h2 data-testid="album-name">
+            { albumName }
+          </h2>
+          <h2 data-testid="artist-name">
+            { artistName }
+          </h2>
         </div>
-
+        <div>
+          {mscFetched && musicList.slice(1).map((music) => (
+            <MusicCard
+              trackName={ music.trackName }
+              previewUrl={ music.previewUrl }
+              trackId={ music.trackId }
+              favoriteMusic={ () => this.favoriteMusics(music) }
+              checked={ music.checked }
+              key={ music.trackId }
+            />
+          ))}
+        </div>
       </div>
     );
   }
 }
-
-Album.propTypes = {
-  match: PropTypes.instanceOf(Object).isRequired,
-};
 
 export default Album;
