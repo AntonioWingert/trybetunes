@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import Loading from './components/Loading/Loading';
+import { MainContent, Form } from '../Styles/Login';
+import logo from '../assets/logo.svg';
 
 class Login extends Component {
   render() {
@@ -14,27 +16,29 @@ class Login extends Component {
       redirect,
     } = this.props;
     return (
-      <main data-testid="page-login">
+      <MainContent data-testid="page-login">
         {isLoading ? <Loading /> : (
-          <form>
+          <Form>
+            <img src={ logo } alt="logo-trybe-tunes" />
             <input
               type="text"
               name="nickname"
               data-testid="login-name-input"
               value={ nickname }
               onChange={ handleChange }
+              placeholder="Qual é o seu nome?"
             />
             <button
-              type="button"
+              type="submit"
               disabled={ !isValid }
               data-testid="login-submit-button"
               onClick={ createUser }
             >
-              Entrar
+              ENTRAR
             </button>
-          </form>)}
+          </Form>)}
         {redirect && <Redirect to="/search" />}
-      </main>
+      </MainContent>
     );
   }
 }

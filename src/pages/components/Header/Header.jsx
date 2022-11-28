@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { getUser } from '../../../services/userAPI';
 import Loading from '../Loading/Loading';
+import { HeaderContainer, MainContent, Links } from './HeaderStyle';
+import logo from '../../../assets/logo.svg';
 
 class Header extends Component {
   state = {
@@ -19,12 +21,12 @@ class Header extends Component {
   render() {
     const { username, isLoadingHeader } = this.state;
     return (
-      <header data-testid="header-component">
+      <HeaderContainer data-testid="header-component">
         {
           isLoadingHeader ? (
-            <div>
-              <span data-testid="header-user-name">{username}</span>
-              <nav>
+            <MainContent>
+              <img src={ logo } alt="logo" />
+              <Links>
                 <li>
                   <Link
                     to="/search"
@@ -49,13 +51,14 @@ class Header extends Component {
                     Perfil
                   </Link>
                 </li>
-              </nav>
-            </div>
+              </Links>
+              <h1 data-testid="header-user-name">{username}</h1>
+            </MainContent>
           ) : (
             <Loading />
           )
         }
-      </header>
+      </HeaderContainer>
     );
   }
 }

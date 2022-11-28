@@ -119,7 +119,7 @@ class ProfileEdit extends Component {
             disabled={ !this.validateButton() }
             onClick={ this.updateUserInfos }
           >
-            Salvar
+            Atualizar perfil
 
           </button>
         </div>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Main, MainSearch } from '../Styles/Search';
 import Header from './components/Header/Header';
 import Loading from './components/Loading/Loading';
 import MusicCard from './components/MusicCardSearch/MusicCardSearch';
@@ -21,46 +22,47 @@ class Search extends Component {
     const empty = searchAux && searchResults.length === 0;
 
     return (
-      <div data-testid="page-search">
+      <Main>
         <Header />
-        <input
-          value={ inputArtistName }
-          name="inputArtistName"
-          type="text"
-          data-testid="search-artist-input"
-          onChange={ handleChange }
-          placeholder="Insira o nome do Artista ou Banda"
-
-        />
-        <button
-          type="button"
-          data-testid="search-artist-button"
-          disabled={ !isValid }
-          onClick={ getAlbumAPI }
-        >
-          Pesquisar
-
-        </button>
-
-        <h2>
-          {success && `Resultado de álbuns de: ${searchArtistName}`}
-        </h2>
-        <div>
-          {isLoading && <Loading />}
-          <div>
-            {success && searchResults.map((music) => (
-              <MusicCard
-                artistName={ music.artistName }
-                artworkUrl={ music.artworkUrl100 }
-                collectionId={ music.collectionId }
-                collectionName={ music.collectionName }
-                key={ music.collectionId }
-              />
-            )) }
-            { empty && <span>Nenhum álbum foi encontrado</span>}
+        <MainSearch data-testid="page-search">
+          <div className="search-header">
+            <input
+              value={ inputArtistName }
+              name="inputArtistName"
+              type="text"
+              data-testid="search-artist-input"
+              onChange={ handleChange }
+              placeholder="nome do artista"
+            />
+            <button
+              type="button"
+              data-testid="search-artist-button"
+              disabled={ !isValid }
+              onClick={ getAlbumAPI }
+            >
+              procurar
+            </button>
           </div>
-        </div>
-      </div>
+          <div className="search-results">
+            <h2>
+              {success && `Resultado de álbuns de ${searchArtistName}`}
+            </h2>
+            {isLoading && <Loading />}
+            <div>
+              {success && searchResults.map((music) => (
+                <MusicCard
+                  artistName={ music.artistName }
+                  artworkUrl={ music.artworkUrl100 }
+                  collectionId={ music.collectionId }
+                  collectionName={ music.collectionName }
+                  key={ music.collectionId }
+                />
+              )) }
+              { empty && <span>Nenhum álbum foi encontrado</span>}
+            </div>
+          </div>
+        </MainSearch>
+      </Main>
     );
   }
 }
